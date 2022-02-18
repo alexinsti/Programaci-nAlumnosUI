@@ -313,14 +313,45 @@ public class Ventana extends JFrame implements ActionListener{
     }
     
     private void seleccionaCurso(int curso){
-        if(curso==0){
-            alumnos.clear();
-            alumnos=cole.getAlumnos();
-        
-        }else if(curso==1){
-            alumnos=
-        
-        
+        switch (curso) {
+            case 0:
+                alumnos.clear();
+                alumnos=cole.getAlumnos();
+                break;
+            case 1:
+                alumnos.clear();
+                for(Alumno alu : cole.getAlumnos()){
+                    if(alu.getCurso()==1){
+                        alumnos.add(alu); 
+                    }
+                    
+                }   
+                break;
+            case 2:
+                alumnos.clear();
+                for(Alumno alu : cole.getAlumnos()){
+                    if(alu.getCurso()==2){
+                        alumnos.add(alu);
+                    } 
+                    
+                }   
+                break;
+            
+            case 3:
+                alumnos.clear();
+                for(Alumno alu : cole.getAlumnos()){
+                    if(alu.getCurso()==2){
+                        alumnos.add(alu);
+                    } 
+                    
+                }   
+                break;
+            
+                
+            default:
+                alumnos.clear();
+                alumnos=cole.getAlumnos();
+                break;
         }
     
     }
