@@ -7,11 +7,15 @@ package testcole;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Comparator;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,6 +34,7 @@ public class Ventana extends JFrame implements ActionListener{
     private JRadioButton nombreRb, cursoRb;
     private JPanel panelAsignaturaPn;
     private JCheckBox a1, a2;
+    private JComboBox<String> cursoCb;
     private Colegio cole;
     public int alumno = 0;
     public ArrayList<Alumno> alumnos = new ArrayList();
@@ -38,6 +43,8 @@ public class Ventana extends JFrame implements ActionListener{
     public Ventana(Colegio cole){
         this.cole=cole;
         cole.ordenaPorNombre();
+        seleccionaCurso("1");
+        System.out.println("Alumnos sin cmabios" + alumnos);
         
         //PANELS
         panelAsignaturaPn = new JPanel();
@@ -68,7 +75,31 @@ public class Ventana extends JFrame implements ActionListener{
                 Ventana.this.setSize(300, 400);
                 izqActiva(true);
             }
-            });
+        });
+        
+        //COMBOBOX
+        cursoCb=new JComboBox<String>();
+        cursoCb.setBounds(150, 20, 80, 30);
+        add(cursoCb);
+        cursoCb.addItem("Todos");
+        cursoCb.addItem("1");
+        cursoCb.addItem("2");
+        cursoCb.addItem("3");
+        cursoCb.addItemListener(new ItemListener(){
+            @Override
+            public void itemStateChanged(ItemEvent e){
+                System.out.println("CAMBIO CURSO a "+(String)cursoCb.getSelectedItem() );
+                if(((String)cursoCb.getSelectedItem()).compareTo("Todos")==0){
+                    System.out.println("cambio Todos por 0");
+                    seleccionaCurso("0");
+                }else{
+                   seleccionaCurso((String)cursoCb.getSelectedItem());  
+                }
+                alumno=0;
+                System.out.println(alumnos.toString());
+                cargaAlumno();
+            }
+        });
         
         
 
@@ -95,14 +126,14 @@ public class Ventana extends JFrame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 
                 panelAsignaturaPn.setVisible(true);
-                Ventana.this.setSize(600, 400);
+                cargaAlumno();        Ventana.this.setSize(600, 400);
                 izqActiva(false);
 
                 for(int i=0;i<Colegio.getCURSO_ASIGNATURAS().length;i++){
                         boolean checked=false;
                         //Como el array de COlegio es de cadenas, y no de asignaturas no puedo usar un contains al no ser del mismo tipo
-                        for(Asignatura a : cole.getAlumnos().get(alumno).getAsignaturas()){
-                            if(a.getNombreAsig().equalsIgnoreCase(Colegio.getCURSO_ASIGNATURAS()[cole.getAlumnos().get(alumno).getCurso()-1][i])){
+                        for(Asignatura a : alumnos.get(alumno).getAsignaturas()){
+                            if(a.getNombreAsig().equalsIgnoreCase(Colegio.getCURSO_ASIGNATURAS()[alumnos.get(alumno).getCurso()-1][i])){
                                 checked=true;
                                 System.out.println(a.toString()+"esta activada");
                                 break;
@@ -111,8 +142,8 @@ public class Ventana extends JFrame implements ActionListener{
                                 System.out.println(a.toString()+"NO esta activada");
                             }
                         }
-                        System.out.println("Este alumno cursa: "+cole.getAlumnos().get(alumno).getAsignaturas().toString());
-                        a1 = new JCheckBox(Colegio.getCURSO_ASIGNATURAS()[cole.getAlumnos().get(alumno).getCurso()-1][i], checked);
+                        System.out.println("Este alumno cursa: "+alumnos.get(alumno).getAsignaturas().toString());
+                        a1 = new JCheckBox(Colegio.getCURSO_ASIGNATURAS()[alumnos.get(alumno).getCurso()-1][i], checked);
                         panelAsignaturaPn.add(a1);
                         
                         
@@ -120,7 +151,7 @@ public class Ventana extends JFrame implements ActionListener{
                         
                     
                     
-                    System.out.println(Colegio.getCURSO_ASIGNATURAS()[cole.getAlumnos().get(alumno).getCurso()-1][i]);
+                    System.out.println(Colegio.getCURSO_ASIGNATURAS()[alumnos.get(alumno).getCurso()-1][i]);
                 
                 }
                 
@@ -146,14 +177,15 @@ public class Ventana extends JFrame implements ActionListener{
                     System.out.println(panelAsignaturaPn.getComponent(i).toString());
                 }
                 System.out.println("Limpio Asignaturas del alumno");
-                cole.getAlumnos().get(alumno).getAsignaturas().clear();
-                System.out.println("Este alumno cursa: "+cole.getAlumnos().get(alumno).getAsignaturas().toString());
+                alumnos.get(alumno).getAsignaturas().clear();
+                System.out.println("Este alumno cursa: "+alumnos.get(alumno).getAsignaturas().toString());
                 for(int i=0; i<=panelAsignaturaPn.getComponents().length+1;i++){
                     JCheckBox CbAuxiliar = new JCheckBox();
                     if(((JCheckBox)panelAsignaturaPn.getComponent(0)).isSelected()){
-                        System.out.println("Creo: "+panelAsignaturaPn.getComponent(0).toString());
-                        asig=new Asignatura(Colegio.getCURSO_ASIGNATURAS()[cole.getAlumnos().get(alumno).getCurso()-1][contadorAsig]);
-                        cole.getAlumnos().get(alumno).getAsignaturas().add(asig);
+                        System.out.println("Creo: "+panelAsignaturaPn.getComponent(0).toString() + "que es el numero " + contadorAsig);
+                        
+                        asig=new Asignatura(Colegio.getCURSO_ASIGNATURAS()[alumnos.get(alumno).getCurso()-1][contadorAsig]);
+                        alumnos.get(alumno).getAsignaturas().add(asig);
                    
                     }
                    
@@ -163,7 +195,7 @@ public class Ventana extends JFrame implements ActionListener{
                    panelAsignaturaPn.remove(panelAsignaturaPn.getComponent(0));
                    contadorAsig++;
                    
-                   System.out.println("Este alumno cursa: "+cole.getAlumnos().get(alumno).getAsignaturas().toString());
+                   System.out.println("Este alumno cursa: "+alumnos.get(alumno).getAsignaturas().toString());
                 
                 }
                 /*
@@ -174,11 +206,11 @@ public class Ventana extends JFrame implements ActionListener{
                 
                 }*/
                 
-                
+                /*
                 alumnos.clear();
                 alumnos=cole.getAlumnos();
                 System.out.println(alumnos.toString());
-                
+                */
             }
             });
        
@@ -260,7 +292,7 @@ public class Ventana extends JFrame implements ActionListener{
             cargaAlumno();
         }
         
-        if(e.getSource()==drBt&&alumno<cole.getAlumnos().size()-1){
+        if(e.getSource()==drBt&&alumno<alumnos.size()-1){
             //System.out.println(alumno);
             this.alumno++;
             dniTf.setText(" ");
@@ -268,13 +300,15 @@ public class Ventana extends JFrame implements ActionListener{
         }
         
         if(e.getSource()==nombreRb){
-            cole.ordenaPorNombre();
+            alumnos.sort(null);
             alumno=0;
             cargaAlumno();
         }
         
         if(e.getSource()==cursoRb){
-            cole.ordenaPorCursoNombre();
+            seleccionaCurso("0");
+            cursoCb.setSelectedIndex(0);
+            alumnos.sort(new ComparaCursoNombre());
             alumno=0;
             cargaAlumno();
         }
@@ -285,10 +319,10 @@ public class Ventana extends JFrame implements ActionListener{
     }
     
     private void cargaAlumno(){
-        cursoTf.setText(String.valueOf(cole.getAlumnos().get(alumno).getCurso()));
-        dniTf.setText(String.valueOf(cole.getAlumnos().get(alumno).getDni()));
-        nombreTf.setText(String.valueOf(cole.getAlumnos().get(alumno).getNombre()));
-        fechaNacimientoTf.setText(String.valueOf(cole.getAlumnos().get(alumno).getFechaNacimiento()));
+        cursoTf.setText(String.valueOf(alumnos.get(alumno).getCurso()));
+        dniTf.setText(String.valueOf(alumnos.get(alumno).getDni()));
+        nombreTf.setText(String.valueOf(alumnos.get(alumno).getNombre()));
+        fechaNacimientoTf.setText(String.valueOf(alumnos.get(alumno).getFechaNacimiento()));
     }
     
     private void izqActiva(boolean opcion){
@@ -312,48 +346,84 @@ public class Ventana extends JFrame implements ActionListener{
         panelAsignaturaPn.setEnabled(!opcion);
     }
     
-    private void seleccionaCurso(int curso){
+    private void seleccionaCurso(String curso){
         switch (curso) {
-            case 0:
-                alumnos.clear();
-                alumnos=cole.getAlumnos();
-                break;
-            case 1:
+            case "0":
                 alumnos.clear();
                 for(Alumno alu : cole.getAlumnos()){
+                    alumnos.add(alu);
+                    
+                }
+                System.out.println("Copio alumnos desde cole "+cole.getAlumnos().toString());
+                System.out.println("desde seleccionacurso"+alumnos.toString());
+                break;
+            case "1":
+                alumnos.clear();
+                for(Alumno alu : cole.getAlumnos()){
+                        System.out.println(alu.toString());
                     if(alu.getCurso()==1){
                         alumnos.add(alu); 
                     }
                     
-                }   
+                }  
+                System.out.println("desde seleccionacurso"+alumnos.toString());
                 break;
-            case 2:
+            case "2":
                 alumnos.clear();
                 for(Alumno alu : cole.getAlumnos()){
                     if(alu.getCurso()==2){
                         alumnos.add(alu);
                     } 
                     
-                }   
+                }
+                System.out.println("desde seleccionacurso"+alumnos.toString());
                 break;
             
-            case 3:
+            case "3":
                 alumnos.clear();
                 for(Alumno alu : cole.getAlumnos()){
-                    if(alu.getCurso()==2){
+                    if(alu.getCurso()==3){
                         alumnos.add(alu);
                     } 
                     
-                }   
+                }  
+                System.out.println("desde seleccionacurso"+alumnos.toString());
                 break;
             
                 
             default:
                 alumnos.clear();
                 alumnos=cole.getAlumnos();
+                System.out.println("desde seleccionacurso"+alumnos.toString());
                 break;
         }
     
+    }
+    class ComparaCursoNombre implements Comparator<Alumno>{
+
+        @Override
+        public int compare(Alumno o1, Alumno o2) {
+            int numero = 0;
+            
+            if (o1.getCurso() > o2.getCurso()) {
+                numero = 1;
+            } else {
+                if (o1.getCurso() < o2.getCurso()) {
+                    numero = -1;
+                } else {
+                    /*if (o1.getCurso() == o2.getCurso()) {*/
+                        numero = o1.getNombre().compareToIgnoreCase(o2.getNombre());
+                    //}
+                }
+            }
+            
+            return numero;
+            
+        }
+        
+        
+        
+        
     }
     
 }
