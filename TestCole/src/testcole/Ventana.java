@@ -306,7 +306,6 @@ public class Ventana extends JFrame implements ActionListener{
         }
         
         if(e.getSource()==cursoRb){
-            seleccionaCurso("0");
             cursoCb.setSelectedIndex(0);
             alumnos.sort(new ComparaCursoNombre());
             alumno=0;
