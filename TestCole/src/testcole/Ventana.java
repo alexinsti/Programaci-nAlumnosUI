@@ -42,8 +42,8 @@ public class Ventana extends JFrame implements ActionListener{
     
     public Ventana(Colegio cole){
         this.cole=cole;
+        seleccionaCurso("0");
         cole.ordenaPorNombre();
-        seleccionaCurso("1");
         System.out.println("Alumnos sin cmabios" + alumnos);
         
         //PANELS
