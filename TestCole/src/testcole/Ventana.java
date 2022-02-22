@@ -42,7 +42,7 @@ public class Ventana extends JFrame implements ActionListener{
     
     public Ventana(Colegio cole){
         this.cole=cole;
-        seleccionaCurso("0");
+        seleccionaCurso("Todos");
         cole.ordenaPorNombre();
         System.out.println("Alumnos sin cmabios" + alumnos);
         
@@ -89,12 +89,7 @@ public class Ventana extends JFrame implements ActionListener{
             @Override
             public void itemStateChanged(ItemEvent e){
                 System.out.println("CAMBIO CURSO a "+(String)cursoCb.getSelectedItem() );
-                if(((String)cursoCb.getSelectedItem()).compareTo("Todos")==0){
-                    System.out.println("cambio Todos por 0");
-                    seleccionaCurso("0");
-                }else{
-                   seleccionaCurso((String)cursoCb.getSelectedItem());  
-                }
+                seleccionaCurso((String)cursoCb.getSelectedItem());
                 alumno=0;
                 System.out.println(alumnos.toString());
                 cargaAlumno();
@@ -347,7 +342,7 @@ public class Ventana extends JFrame implements ActionListener{
     
     private void seleccionaCurso(String curso){
         switch (curso) {
-            case "0":
+            case "Todos":
                 alumnos.clear();
                 for(Alumno alu : cole.getAlumnos()){
                     alumnos.add(alu);
