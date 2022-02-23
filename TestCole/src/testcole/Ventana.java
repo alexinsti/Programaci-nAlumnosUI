@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import javax.swing.BorderFactory;
@@ -21,6 +23,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import static testcole.TestCole.colegio;
+import static testcole.TestCole.escribeError;
 
 /**
  *
@@ -222,9 +226,40 @@ public class Ventana extends JFrame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
                 System.out.println("ACTIVO ALTA");
-
+                String datosBrutos = cursoTf.getText()+"/"+dniTf.getText()+"/"+nombreTf.getText()+"/"+fechaNacimientoTf.getText();
+               
+                String nombreFichero="errores_"+LocalDateTime.now().toString().replace(":", "_")+".txt";
+                Alumno alu;
+          
+                try {
+                    alu = new Alumno(Integer.parseInt(cursoTf.getText()), dniTf.getText(), nombreTf.getText(), fechaNacimientoTf.getText());
+                    cole.insertaAlumno(alu);
+                    BufferedWriter salidaAlumno = IO.abreEscrituraAnnadir("alumnos.txt");
+                    IO.escribeLinea(salidaAlumno, datosBrutos);
+                    IO.cierraEscritura(salidaAlumno);
+                    System.out.println("construido alumno");
+                    System.out.println(cole.getAlumnos());
+                } catch (MiExcepcion ex) {
+                    escribeError(nombreFichero, datosBrutos+"---Error: "+ex.getMessage());
+                    
+                }
+                
+                seleccionaCurso((String)cursoCb.getSelectedItem());
+                
+                if(nombreRb.isSelected()){
+                    alumnos.sort(null);
+                    alumno=0;
+                    cargaAlumno();
+                }else{
+                    cursoCb.setSelectedIndex(0);
+                    alumnos.sort(new ComparaCursoNombre());
+                    alumno=0;
+                    cargaAlumno();
+                }
+   
             }
             });
+            
         
         bajaBt = new JButton("Baja");
         bajaBt.setBounds(180, 350, 80, 30);
