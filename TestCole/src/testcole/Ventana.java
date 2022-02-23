@@ -32,11 +32,11 @@ import static testcole.TestCole.escribeError;
  */
 public class Ventana extends JFrame implements ActionListener{
         
-    private JButton izqBt, drBt, matriculaBt, guardarBt, altaBt, bajaBt, editarBt;
+    private JButton izqBt, drBt, matriculaBt, guardarBt, altaBt, bajaBt, editarBt, guardarAlumnoBt, cancelarAlumnoBt;
     private JLabel cursoLb, dniLb, nombreLb, fechaNacimientoLb;
     private JTextField cursoTf, dniTf, nombreTf, fechaNacimientoTf;
     private JRadioButton nombreRb, cursoRb;
-    private JPanel panelAsignaturaPn;
+    private JPanel panelAsignaturaPn, panelAlumnoPn;
     private JCheckBox a1, a2;
     private JComboBox<String> cursoCb;
     private Colegio cole;
@@ -56,6 +56,12 @@ public class Ventana extends JFrame implements ActionListener{
         panelAsignaturaPn.setBounds(300, 10, 200, 270);
         panelAsignaturaPn.setBorder(BorderFactory.createTitledBorder("Asignaturas"));
         panelAsignaturaPn.setVisible(false);
+        
+        panelAlumnoPn = new JPanel();
+        panelAlumnoPn.setLayout(new GridLayout(0, 1));
+        panelAlumnoPn.setBounds(300, 10, 200, 270);
+        panelAlumnoPn.setBorder(BorderFactory.createTitledBorder("Datos"));
+        panelAlumnoPn.setVisible(false);
         
         
         //CHECKBOXES INTO PANEL
@@ -170,6 +176,7 @@ public class Ventana extends JFrame implements ActionListener{
                 //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
                 System.out.println("ACTIVO GUARDAR");
                 panelAsignaturaPn.setVisible(false);
+                guardarBt.setVisible(false);
                 Ventana.this.setSize(300, 450);
                 izqActiva(true);
                 Asignatura asig;
@@ -289,6 +296,8 @@ public class Ventana extends JFrame implements ActionListener{
                     alumno=0;
                     cargaAlumno();
                 }
+                
+                //TODO Añadir que se borre del fichero al alumno eliminado
             }
             });
         editarBt = new JButton("Editar");
@@ -299,8 +308,54 @@ public class Ventana extends JFrame implements ActionListener{
                 //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
                 System.out.println("ACTIVO EDITAR");
                 
+                panelAsignaturaPn.setVisible(true);
+                guardarBt.setVisible(true);
+                cancelarAlumnoBt.setVisible(true);
+                cargaAlumno();        
+                Ventana.this.setSize(600, 450);
+                izqActiva(false);
+ 
             }
             });
+        
+        guardarAlumnoBt=new JButton("Guardar");
+        guardarAlumnoBt.setBounds(330, 300, 120, 30);
+        guardarAlumnoBt.setVisible(false);
+        guardarAlumnoBt.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                System.out.println("ACTIVO GUARDARALUMNOS");
+                panelAsignaturaPn.setVisible(false);
+                guardarBt.setVisible(false);
+                cancelarAlumnoBt.setVisible(false);
+                Ventana.this.setSize(300, 450);
+                izqActiva(true);
+               
+                //TODO hacer todo esto y cambiar setter 
+            }
+            });
+        
+        cancelarAlumnoBt=new JButton("Cancelar");
+        cancelarAlumnoBt.setBounds(330, 350, 120, 30);
+        cancelarAlumnoBt.setVisible(false);
+        cancelarAlumnoBt.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                System.out.println("ACTIVO CNCELARALUMNOS");
+                panelAsignaturaPn.setVisible(false);
+                guardarBt.setVisible(false);
+                cancelarAlumnoBt.setVisible(false);
+                Ventana.this.setSize(300, 450);
+                izqActiva(true);
+               
+                //TODO hacer todo esto y cambiar setter 
+            }
+            });
+        
+        
+        
         
         //RADIALBUTTONS 
         nombreRb = new JRadioButton("Ordena por nombre");
@@ -366,6 +421,11 @@ public class Ventana extends JFrame implements ActionListener{
         this.add(altaBt);
         this.add(bajaBt);
         this.add(editarBt);
+        this.add(panelAlumnoPn);
+        this.add(guardarAlumnoBt);
+        this.add(cancelarAlumnoBt);
+        
+        
         
     
         cargaAlumno();
@@ -435,6 +495,9 @@ public class Ventana extends JFrame implements ActionListener{
         editarBt.setEnabled(opcion);
         guardarBt.setEnabled(!opcion);
         panelAsignaturaPn.setEnabled(!opcion);
+        guardarAlumnoBt.setEnabled(!opcion);
+        cancelarAlumnoBt.setEnabled(!opcion);
+        cursoCb.setEnabled(opcion);
     }
     
     private void seleccionaCurso(String curso){
