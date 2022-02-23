@@ -28,7 +28,7 @@ import javax.swing.JTextField;
  */
 public class Ventana extends JFrame implements ActionListener{
         
-    private JButton izqBt, drBt, matriculaBt, guardarBt;
+    private JButton izqBt, drBt, matriculaBt, guardarBt, altaBt, bajaBt, editarBt;
     private JLabel cursoLb, dniLb, nombreLb, fechaNacimientoLb;
     private JTextField cursoTf, dniTf, nombreTf, fechaNacimientoTf;
     private JRadioButton nombreRb, cursoRb;
@@ -72,6 +72,7 @@ public class Ventana extends JFrame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
                 panelAsignaturaPn.setVisible(false);
+                guardarBt.setVisible(false);
                 Ventana.this.setSize(300, 400);
                 izqActiva(true);
             }
@@ -101,7 +102,7 @@ public class Ventana extends JFrame implements ActionListener{
         //LAYOUT
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
-        this.setSize(300,400);
+        this.setSize(300,450);
         
         //BUTTONS
         izqBt=new JButton("<<");
@@ -121,7 +122,9 @@ public class Ventana extends JFrame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 
                 panelAsignaturaPn.setVisible(true);
-                cargaAlumno();        Ventana.this.setSize(600, 400);
+                guardarBt.setVisible(true);
+                cargaAlumno();        
+                Ventana.this.setSize(600, 450);
                 izqActiva(false);
 
                 for(int i=0;i<Colegio.getCURSO_ASIGNATURAS().length;i++){
@@ -156,13 +159,14 @@ public class Ventana extends JFrame implements ActionListener{
        
        guardarBt=new JButton("Guardar");
         guardarBt.setBounds(330, 300, 120, 30);
+        guardarBt.setVisible(false);
         guardarBt.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
                 System.out.println("ACTIVO GUARDAR");
                 panelAsignaturaPn.setVisible(false);
-                Ventana.this.setSize(300, 400);
+                Ventana.this.setSize(300, 450);
                 izqActiva(true);
                 Asignatura asig;
                 int contadorAsig=0;
@@ -208,8 +212,40 @@ public class Ventana extends JFrame implements ActionListener{
                 */
             }
             });
+        
+        
        
-       
+        altaBt = new JButton("Alta");
+        altaBt.setBounds(20, 350, 80 ,30);
+        altaBt.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                System.out.println("ACTIVO ALTA");
+
+            }
+            });
+        
+        bajaBt = new JButton("Baja");
+        bajaBt.setBounds(180, 350, 80, 30);
+        bajaBt.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                System.out.println("ACTIVO BAJA");
+                
+            }
+            });
+        editarBt = new JButton("Editar");
+        editarBt.setBounds(105, 350, 70, 30);
+        editarBt.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                System.out.println("ACTIVO EDITAR");
+                
+            }
+            });
         
         //RADIALBUTTONS 
         nombreRb = new JRadioButton("Ordena por nombre");
@@ -272,6 +308,9 @@ public class Ventana extends JFrame implements ActionListener{
         this.add(cursoRb);
         this.add(panelAsignaturaPn);
         this.add(guardarBt);
+        this.add(altaBt);
+        this.add(bajaBt);
+        this.add(editarBt);
         
     
         cargaAlumno();
@@ -336,6 +375,9 @@ public class Ventana extends JFrame implements ActionListener{
         izqBt.setEnabled(opcion);
         izqBt.setEnabled(opcion);
         izqBt.setEnabled(opcion);
+        altaBt.setEnabled(opcion);
+        bajaBt.setEnabled(opcion);
+        editarBt.setEnabled(opcion);
         guardarBt.setEnabled(!opcion);
         panelAsignaturaPn.setEnabled(!opcion);
     }
