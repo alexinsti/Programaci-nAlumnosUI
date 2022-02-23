@@ -268,7 +268,27 @@ public class Ventana extends JFrame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
                 System.out.println("ACTIVO BAJA");
+          
+                String datosExtraccion;
+                datosExtraccion = alumnos.get(alumno).getCurso()+"/"+alumnos.get(alumno).getDni()+"/"+alumnos.get(alumno).getNombre()+"/"+alumnos.get(alumno).getFechaNacimiento();
+                colegio.getAlumnos().remove(alumnos.get(alumno));
+                        
+                BufferedWriter salidaExpulsados = IO.abreEscrituraAnnadir("ficheroExpulsados.txt");
+                IO.escribeLinea(salidaExpulsados, datosExtraccion);
+                IO.cierraEscritura(salidaExpulsados);
                 
+                seleccionaCurso((String)cursoCb.getSelectedItem());
+                
+                if(nombreRb.isSelected()){
+                    alumnos.sort(null);
+                    alumno=0;
+                    cargaAlumno();
+                }else{
+                    cursoCb.setSelectedIndex(0);
+                    alumnos.sort(new ComparaCursoNombre());
+                    alumno=0;
+                    cargaAlumno();
+                }
             }
             });
         editarBt = new JButton("Editar");
