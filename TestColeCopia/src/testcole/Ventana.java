@@ -9,8 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.BufferedWriter;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import javax.swing.BorderFactory;
@@ -23,8 +21,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import static testcole.TestCole.colegio;
-import static testcole.TestCole.escribeError;
 
 /**
  *
@@ -32,11 +28,11 @@ import static testcole.TestCole.escribeError;
  */
 public class Ventana extends JFrame implements ActionListener{
         
-    private JButton izqBt, drBt, matriculaBt, guardarBt, altaBt, bajaBt, editarBt, guardarAlumnoBt, cancelarAlumnoBt;
-    private JLabel cursoLb, dniLb, nombreLb, fechaNacimientoLb, cursoEditarLb, dniEditarLb, nombreEditarLb, fechaNacimientoEditarLb;
-    private JTextField cursoTf, dniTf, nombreTf, fechaNacimientoTf, cursoEditarTf, dniEditarTf, nombreEditarTf, fechaNacimientoEditarTf;
+    private JButton izqBt, drBt, matriculaBt, guardarBt;
+    private JLabel cursoLb, dniLb, nombreLb, fechaNacimientoLb;
+    private JTextField cursoTf, dniTf, nombreTf, fechaNacimientoTf;
     private JRadioButton nombreRb, cursoRb;
-    private JPanel panelAsignaturaPn, panelAlumnoPn;
+    private JPanel panelAsignaturaPn;
     private JCheckBox a1, a2;
     private JComboBox<String> cursoCb;
     private Colegio cole;
@@ -57,12 +53,6 @@ public class Ventana extends JFrame implements ActionListener{
         panelAsignaturaPn.setBorder(BorderFactory.createTitledBorder("Asignaturas"));
         panelAsignaturaPn.setVisible(false);
         
-        panelAlumnoPn = new JPanel();
-        panelAlumnoPn.setLayout(null);
-        panelAlumnoPn.setBounds(300, 10, 200, 270);
-        panelAlumnoPn.setBorder(BorderFactory.createTitledBorder("Datos"));
-        panelAlumnoPn.setVisible(false);
-        
         
         //CHECKBOXES INTO PANEL
         //a1 = new JCheckBox("Asignatura1");
@@ -82,7 +72,6 @@ public class Ventana extends JFrame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
                 panelAsignaturaPn.setVisible(false);
-                guardarBt.setVisible(false);
                 Ventana.this.setSize(300, 400);
                 izqActiva(true);
             }
@@ -112,7 +101,7 @@ public class Ventana extends JFrame implements ActionListener{
         //LAYOUT
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
-        this.setSize(300,450);
+        this.setSize(300,400);
         
         //BUTTONS
         izqBt=new JButton("<<");
@@ -132,9 +121,7 @@ public class Ventana extends JFrame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 
                 panelAsignaturaPn.setVisible(true);
-                guardarBt.setVisible(true);
-                cargaAlumno();        
-                Ventana.this.setSize(600, 450);
+                cargaAlumno();        Ventana.this.setSize(600, 400);
                 izqActiva(false);
 
                 for(int i=0;i<Colegio.getCURSO_ASIGNATURAS().length;i++){
@@ -169,15 +156,13 @@ public class Ventana extends JFrame implements ActionListener{
        
        guardarBt=new JButton("Guardar");
         guardarBt.setBounds(330, 300, 120, 30);
-        guardarBt.setVisible(false);
         guardarBt.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
                 System.out.println("ACTIVO GUARDAR");
                 panelAsignaturaPn.setVisible(false);
-                guardarBt.setVisible(false);
-                Ventana.this.setSize(300, 450);
+                Ventana.this.setSize(300, 400);
                 izqActiva(true);
                 Asignatura asig;
                 int contadorAsig=0;
@@ -223,139 +208,8 @@ public class Ventana extends JFrame implements ActionListener{
                 */
             }
             });
-        
-        
        
-        altaBt = new JButton("Alta");
-        altaBt.setBounds(20, 350, 80 ,30);
-        altaBt.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-                System.out.println("ACTIVO ALTA");
-                String datosBrutos = cursoTf.getText()+"/"+dniTf.getText()+"/"+nombreTf.getText()+"/"+fechaNacimientoTf.getText();
-               
-                String nombreFichero="errores_"+LocalDateTime.now().toString().replace(":", "_")+".txt";
-                Alumno alu;
-          
-                try {
-                    alu = new Alumno(Integer.parseInt(cursoTf.getText()), dniTf.getText(), nombreTf.getText(), fechaNacimientoTf.getText());
-                    cole.insertaAlumno(alu);
-                    BufferedWriter salidaAlumno = IO.abreEscrituraAnnadir("alumnos.txt");
-                    IO.escribeLinea(salidaAlumno, datosBrutos);
-                    IO.cierraEscritura(salidaAlumno);
-                    System.out.println("construido alumno");
-                    System.out.println(cole.getAlumnos());
-                } catch (MiExcepcion ex) {
-                    escribeError(nombreFichero, datosBrutos+"---Error: "+ex.getMessage());
-                    
-                }
-                
-                seleccionaCurso((String)cursoCb.getSelectedItem());
-                
-                if(nombreRb.isSelected()){
-                    alumnos.sort(null);
-                    alumno=0;
-                    cargaAlumno();
-                }else{
-                    cursoCb.setSelectedIndex(0);
-                    alumnos.sort(new ComparaCursoNombre());
-                    alumno=0;
-                    cargaAlumno();
-                }
-   
-            }
-            });
-            
-        
-        bajaBt = new JButton("Baja");
-        bajaBt.setBounds(180, 350, 80, 30);
-        bajaBt.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-                System.out.println("ACTIVO BAJA");
-          
-                String datosExtraccion;
-                datosExtraccion = alumnos.get(alumno).getCurso()+"/"+alumnos.get(alumno).getDni()+"/"+alumnos.get(alumno).getNombre()+"/"+alumnos.get(alumno).getFechaNacimiento();
-                colegio.getAlumnos().remove(alumnos.get(alumno));
-                        
-                BufferedWriter salidaExpulsados = IO.abreEscrituraAnnadir("ficheroExpulsados.txt");
-                IO.escribeLinea(salidaExpulsados, datosExtraccion);
-                IO.cierraEscritura(salidaExpulsados);
-                
-                seleccionaCurso((String)cursoCb.getSelectedItem());
-                
-                if(nombreRb.isSelected()){
-                    alumnos.sort(null);
-                    alumno=0;
-                    cargaAlumno();
-                }else{
-                    cursoCb.setSelectedIndex(0);
-                    alumnos.sort(new ComparaCursoNombre());
-                    alumno=0;
-                    cargaAlumno();
-                }
-                
-                //TODO Añadir que se borre del fichero al alumno eliminado
-            }
-            });
-        editarBt = new JButton("Editar");
-        editarBt.setBounds(105, 350, 70, 30);
-        editarBt.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-                System.out.println("ACTIVO EDITAR");
-                
-                panelAlumnoPn.setVisible(true);
-                guardarAlumnoBt.setVisible(true);
-                cancelarAlumnoBt.setVisible(true);
-                cargaAlumnoEditar();        
-                Ventana.this.setSize(600, 450);
-                izqActiva(false);
- 
-            }
-            });
-        
-        guardarAlumnoBt=new JButton("Guardar");
-        guardarAlumnoBt.setBounds(330, 300, 120, 30);
-        guardarAlumnoBt.setVisible(false);
-        guardarAlumnoBt.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-                System.out.println("ACTIVO GUARDARALUMNOS");
-                panelAlumnoPn.setVisible(false);
-                guardarBt.setVisible(false);
-                cancelarAlumnoBt.setVisible(false);
-                Ventana.this.setSize(300, 450);
-                izqActiva(true);
-               
-                //TODO hacer todo esto y cambiar setter 
-            }
-            });
-        
-        cancelarAlumnoBt=new JButton("Cancelar");
-        cancelarAlumnoBt.setBounds(330, 350, 120, 30);
-        cancelarAlumnoBt.setVisible(false);
-        cancelarAlumnoBt.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-                System.out.println("ACTIVO CANCELARALUMNOS");
-                panelAsignaturaPn.setVisible(false);
-                guardarBt.setVisible(false);
-                cancelarAlumnoBt.setVisible(false);
-                Ventana.this.setSize(300, 450);
-                izqActiva(true);
-               
-                //TODO hacer todo esto y cambiar setter 
-            }
-            });
-        
-        
-        
+       
         
         //RADIALBUTTONS 
         nombreRb = new JRadioButton("Ordena por nombre");
@@ -386,23 +240,6 @@ public class Ventana extends JFrame implements ActionListener{
         fechaNacimientoLb = new JLabel("Fecha de nacimiento:"); 
         fechaNacimientoLb.setBounds(20, 140, 150, 30);
         
-        cursoEditarLb = new JLabel("Curso:"); 
-        cursoEditarLb.setBounds(5, 20, 50, 30);
-        panelAlumnoPn.add(cursoEditarLb);
-        
-        dniEditarLb = new JLabel("DNI:"); 
-        dniEditarLb.setBounds(5, 60, 50, 30);
-        panelAlumnoPn.add(dniEditarLb);
-        
-        
-        nombreEditarLb = new JLabel("Nombre:"); 
-        nombreEditarLb.setBounds(5, 100, 50, 30);
-        panelAlumnoPn.add(nombreEditarLb);
-        
-        fechaNacimientoEditarLb = new JLabel("Fecha:"); 
-        fechaNacimientoEditarLb.setBounds(5, 140, 150, 30);
-        panelAlumnoPn.add(fechaNacimientoEditarLb);
-        
         //TEXTFIELDS
         cursoTf = new JTextField(10); 
         cursoTf.setBounds(80, 20, 50, 30);
@@ -415,22 +252,6 @@ public class Ventana extends JFrame implements ActionListener{
         
         fechaNacimientoTf = new JTextField(30); 
         fechaNacimientoTf.setBounds(160, 140, 100, 30);
-        
-        cursoEditarTf = new JTextField(10); 
-        cursoEditarTf.setBounds(60, 20, 50, 30);
-        panelAlumnoPn.add(cursoEditarTf);
-         
-        dniEditarTf = new JTextField(30); 
-        dniEditarTf.setBounds(60, 60, 100, 30);
-        panelAlumnoPn.add(dniEditarTf);
-        
-        nombreEditarTf = new JTextField(60); 
-        nombreEditarTf.setBounds(60, 100, 100, 30);
-        panelAlumnoPn.add(nombreEditarTf);
-        
-        fechaNacimientoEditarTf = new JTextField(30); 
-        fechaNacimientoEditarTf.setBounds(60, 140, 100, 30);
-        panelAlumnoPn.add(fechaNacimientoEditarTf);
         
         
         
@@ -451,14 +272,6 @@ public class Ventana extends JFrame implements ActionListener{
         this.add(cursoRb);
         this.add(panelAsignaturaPn);
         this.add(guardarBt);
-        this.add(altaBt);
-        this.add(bajaBt);
-        this.add(editarBt);
-        this.add(panelAlumnoPn);
-        this.add(guardarAlumnoBt);
-        this.add(cancelarAlumnoBt);
-        
-        
         
     
         cargaAlumno();
@@ -506,13 +319,6 @@ public class Ventana extends JFrame implements ActionListener{
         fechaNacimientoTf.setText(String.valueOf(alumnos.get(alumno).getFechaNacimiento()));
     }
     
-    private void cargaAlumnoEditar(){
-        cursoEditarTf.setText(String.valueOf(alumnos.get(alumno).getCurso()));
-        dniEditarTf.setText(String.valueOf(alumnos.get(alumno).getDni()));
-        nombreEditarTf.setText(String.valueOf(alumnos.get(alumno).getNombre()));
-        fechaNacimientoEditarTf.setText(String.valueOf(alumnos.get(alumno).getFechaNacimiento()));
-    }
-    
     private void izqActiva(boolean opcion){
         izqBt.setEnabled(opcion);
         drBt.setEnabled(opcion);
@@ -530,14 +336,8 @@ public class Ventana extends JFrame implements ActionListener{
         izqBt.setEnabled(opcion);
         izqBt.setEnabled(opcion);
         izqBt.setEnabled(opcion);
-        altaBt.setEnabled(opcion);
-        bajaBt.setEnabled(opcion);
-        editarBt.setEnabled(opcion);
         guardarBt.setEnabled(!opcion);
         panelAsignaturaPn.setEnabled(!opcion);
-        guardarAlumnoBt.setEnabled(!opcion);
-        cancelarAlumnoBt.setEnabled(!opcion);
-        cursoCb.setEnabled(opcion);
     }
     
     private void seleccionaCurso(String curso){
