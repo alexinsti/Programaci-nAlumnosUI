@@ -31,51 +31,19 @@ public class Alumno implements Comparable<Alumno> {
     }
 
     public Alumno(int curso, String dni, String nombre, LocalDate fechaNacimiento) {
-        if (curso >= 1 && curso <=3) {
-            this.curso = curso;
-        }else{
-            throw new InvalidParameterException("error curso");
-        }
-        
-        if(esBuenDni(dni))
-            this.dni = dni;
-        else
-            throw new InvalidParameterException("dni no válido");
-        if (nombre.length()>0) 
-            this.nombre = nombre;
-        else 
-            throw new InvalidParameterException("nombre no válido");
-        
-        this.fechaNacimiento = fechaNacimiento;
+        setCurso(curso);
+        setDni(dni);
+        setNombre(nombre);
+        setFechaNacimiento(fechaNacimiento);;
         asignaturas = new ArrayList<Asignatura>();
         //this.asignaAsignaturas(curso);
     }
     
     public Alumno(int curso, String dni, String nombre, String fechaNacimiento) throws MiExcepcion {
-        if (curso >= 1 && curso <=3) {
-            this.curso = curso;
-        }else{
-            throw new InvalidParameterException("error curso");
-        }
-        
-        if(esBuenDni(dni))
-            this.dni = dni;
-        else
-            throw new InvalidParameterException("dni no válido");
-        if (nombre.length()>0) 
-            this.nombre = nombre;
-        else 
-            throw new InvalidParameterException("nombre no válido");
-        
-        try{
-            this.fechaNacimiento = LocalDate.parse(fechaNacimiento);
-            
-        }catch(DateTimeParseException e){
-            throw new MiExcepcion("mala fecha");
-        }
-        
-        
-        
+        setCurso(curso);
+        setDni(dni);
+        setNombre(nombre);
+        setFechaNacimiento(fechaNacimiento);
         asignaturas = new ArrayList<Asignatura>();
         //this.asignaAsignaturas(curso);
     }
@@ -85,7 +53,11 @@ public class Alumno implements Comparable<Alumno> {
     }
 
     public void setCurso(int curso) {
-        this.curso = curso;
+        if (curso >= 1 && curso <=3) {
+            this.curso = curso;
+        }else{
+            throw new InvalidParameterException("error curso");
+        }
     }
 
     public String getDni() {
@@ -93,7 +65,12 @@ public class Alumno implements Comparable<Alumno> {
     }
 
     public void setDni(String dni) {
-        this.dni = dni;
+        if(esBuenDni(dni)){
+           this.dni = dni; 
+        }else{
+             throw new InvalidParameterException("dni no válido");
+        }
+ 
     }
 
     public String getNombre() {
@@ -110,6 +87,14 @@ public class Alumno implements Comparable<Alumno> {
 
     public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
+    }
+    public void setFechaNacimiento(String fechaNacimiento) throws MiExcepcion{
+        try{
+            this.fechaNacimiento = LocalDate.parse(fechaNacimiento);
+            
+        }catch(DateTimeParseException e){
+            throw new MiExcepcion("mala fecha");
+        }
     }
 
     public void asignaAsignaturas(int curso) {
