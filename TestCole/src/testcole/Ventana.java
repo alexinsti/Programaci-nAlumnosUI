@@ -1,698 +1,193 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package testcole;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.io.BufferedWriter;
-import java.time.LocalDateTime;
+import java.security.InvalidParameterException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Comparator;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import static testcole.TestCole.colegio;
-import static testcole.TestCole.escribeError;
+import java.util.Objects;
 
-/**
- *
- * @author Diurno
- */
-public class Ventana extends JFrame implements ActionListener{
-        
-    private JButton izqBt, drBt, matriculaBt, guardarBt, altaBt, bajaBt, editarBt, guardarAlumnoBt, cancelarAlumnoBt;
-    private JLabel cursoLb, dniLb, nombreLb, fechaNacimientoLb, cursoEditarLb, dniEditarLb, nombreEditarLb, fechaNacimientoEditarLb;
-    private JTextField cursoTf, dniTf, nombreTf, fechaNacimientoTf, cursoEditarTf, dniEditarTf, nombreEditarTf, fechaNacimientoEditarTf;
-    private JRadioButton nombreRb, cursoRb;
-    private JPanel panelAsignaturaPn, panelAlumnoPn;
-    private JCheckBox a1, a2;
-    private JComboBox<String> cursoCb;
-    private Colegio cole;
-    public int alumno = 0;
-    public ArrayList<Alumno> alumnos = new ArrayList();
-    public int cursoSeleccionado;
+
+
+
+
+
+public class Alumno implements Comparable<Alumno> {
+// hay que gestionar que los parámetros sean correctos,. curso 1,2,3, dni bueno 
+//    y nombre no vacío con excepciones: invalidParameterException.....
+// usando throw InvalidParameterException
+    private int curso; //valores válidos: 1,2,3
+    private String dni;// comprobar dni
+    private String nombre; // que no esté vacio
+    private LocalDate fechaNacimiento; //que sea buena, crear excepción propia.
+    private ArrayList<Asignatura> asignaturas;
+
+    public ArrayList<Asignatura> getAsignaturas() {
+        return asignaturas;
+    }
+
+    public Alumno(int curso, String dni, String nombre, LocalDate fechaNacimiento) {
+        setCurso(curso);
+        setDni(dni);
+        setNombre(nombre);
+        setFechaNacimiento(fechaNacimiento);;
+        asignaturas = new ArrayList<Asignatura>();
+        //this.asignaAsignaturas(curso);
+    }
     
-    public Ventana(Colegio cole){
-        this.cole=cole;
-        seleccionaCurso("Todos");
-        cole.ordenaPorNombre();
-        System.out.println("Alumnos sin cmabios" + alumnos);
-        
-        //PANELS
-        panelAsignaturaPn = new JPanel();
-        panelAsignaturaPn.setLayout(new GridLayout(0, 1));
-        panelAsignaturaPn.setBounds(300, 10, 200, 270);
-        panelAsignaturaPn.setBorder(BorderFactory.createTitledBorder("Asignaturas"));
-        panelAsignaturaPn.setVisible(false);
-        
-        panelAlumnoPn = new JPanel();
-        panelAlumnoPn.setLayout(null);
-        panelAlumnoPn.setBounds(300, 10, 200, 270);
-        panelAlumnoPn.setBorder(BorderFactory.createTitledBorder("Datos"));
-        panelAlumnoPn.setVisible(false);
-        
-        
-        //CHECKBOXES INTO PANEL
-        //a1 = new JCheckBox("Asignatura1");
-        //a1.setBounds(30, 30, 100, 30);
-        
-        //a2 = new JCheckBox("Asignatura2");
-        //a2.setBounds(30, 60, 100, 30);
-        
-        //panelAsignaturaPn.add(a1);
-        //panelAsignaturaPn.add(a2);
-        
-        //BUTTON INTO PANNEL
-        guardarBt=new JButton("Guardar");
-        guardarBt.setBounds(80, 500, 120, 30);
-        guardarBt.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-                panelAsignaturaPn.setVisible(false);
-                guardarBt.setVisible(false);
-                Ventana.this.setSize(300, 400);
-                izqActiva(true);
-            }
-        });
-        
-        //COMBOBOX
-        cursoCb=new JComboBox<String>();
-        cursoCb.setBounds(150, 20, 80, 30);
-        add(cursoCb);
-        cursoCb.addItem("Todos");
-        cursoCb.addItem("1");
-        cursoCb.addItem("2");
-        cursoCb.addItem("3");
-        cursoCb.addItemListener(new ItemListener(){
-            @Override
-            public void itemStateChanged(ItemEvent e){
-                System.out.println("CAMBIO CURSO a "+(String)cursoCb.getSelectedItem() );
-                seleccionaCurso((String)cursoCb.getSelectedItem());
-                alumno=0;
-                System.out.println(alumnos.toString());
-                cargaAlumno();
-            }
-        });
-        
-        
+    public Alumno(int curso, String dni, String nombre, String fechaNacimiento) throws MiExcepcion {
+        setCurso(curso);
+        setDni(dni);
+        setNombre(nombre);
+        setFechaNacimiento(fechaNacimiento);
+        asignaturas = new ArrayList<Asignatura>();
+        //this.asignaAsignaturas(curso);
+    }
 
-        //LAYOUT
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(null);
-        this.setSize(300,450);
-        
-        //BUTTONS
-        izqBt=new JButton("<<");
-        izqBt.setBounds(20, 250, 80 ,30);
-        izqBt.addActionListener(this);
-        
-        drBt=new JButton(">>");
-        drBt.setBounds(180, 250, 80, 30);
-        drBt.addActionListener(this);
-        
-        matriculaBt=new JButton("Matricula");
-        System.out.println("INICIO MATRICULA");
-        matriculaBt.setBounds(80, 300, 120, 30);
-       // matriculaBt.addActionListener(this);
-       matriculaBt.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                
-                panelAsignaturaPn.setVisible(true);
-                guardarBt.setVisible(true);
-                cargaAlumno();        
-                Ventana.this.setSize(600, 450);
-                izqActiva(false);
+    public int getCurso() {
+        return curso;
+    }
 
-                for(int i=0;i<Colegio.getCURSO_ASIGNATURAS().length;i++){
-                        boolean checked=false;
-                        //Como el array de COlegio es de cadenas, y no de asignaturas no puedo usar un contains al no ser del mismo tipo
-                        for(Asignatura a : alumnos.get(alumno).getAsignaturas()){
-                            if(a.getNombreAsig().equalsIgnoreCase(Colegio.getCURSO_ASIGNATURAS()[alumnos.get(alumno).getCurso()-1][i])){
-                                checked=true;
-                                System.out.println(a.toString()+"esta activada");
-                                break;
-                            }else{
-                            checked=false;
-                                System.out.println(a.toString()+"NO esta activada");
-                            }
-                        }
-                        System.out.println("Este alumno cursa: "+alumnos.get(alumno).getAsignaturas().toString());
-                        a1 = new JCheckBox(Colegio.getCURSO_ASIGNATURAS()[alumnos.get(alumno).getCurso()-1][i], checked);
-                        panelAsignaturaPn.add(a1);
-                        
-                        
-                        
-                        
-                    
-                    
-                    System.out.println(Colegio.getCURSO_ASIGNATURAS()[alumnos.get(alumno).getCurso()-1][i]);
-                
-                }
-                
-                
-            }
-       });
-       
-       guardarBt=new JButton("Guardar");
-        guardarBt.setBounds(330, 300, 120, 30);
-        guardarBt.setVisible(false);
-        guardarBt.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-                System.out.println("ACTIVO GUARDAR");
-                panelAsignaturaPn.setVisible(false);
-                guardarBt.setVisible(false);
-                Ventana.this.setSize(300, 450);
-                izqActiva(true);
-                Asignatura asig;
-                int contadorAsig=0;
-                System.out.println("de las asignaturas: ");
-                //Si borro uno los indices de todeos cambian así que se queda alguno sin borar a menos que el indice empiece por abajo
-                for(int i=0; i<=panelAsignaturaPn.getComponents().length-1;i++){
-                    System.out.println(panelAsignaturaPn.getComponent(i).toString());
-                }
-                System.out.println("Limpio Asignaturas del alumno");
-                alumnos.get(alumno).getAsignaturas().clear();
-                System.out.println("Este alumno cursa: "+alumnos.get(alumno).getAsignaturas().toString());
-                for(int i=0; i<=panelAsignaturaPn.getComponents().length+1;i++){
-                    JCheckBox CbAuxiliar = new JCheckBox();
-                    if(((JCheckBox)panelAsignaturaPn.getComponent(0)).isSelected()){
-                        System.out.println("Creo: "+panelAsignaturaPn.getComponent(0).toString() + "que es el numero " + contadorAsig);
-                        
-                        asig=new Asignatura(Colegio.getCURSO_ASIGNATURAS()[alumnos.get(alumno).getCurso()-1][contadorAsig]);
-                        alumnos.get(alumno).getAsignaturas().add(asig);
-                   
-                    }
-                   
-                   
-                   
-                   System.out.println("Borro: "+panelAsignaturaPn.getComponent(0).toString());
-                   panelAsignaturaPn.remove(panelAsignaturaPn.getComponent(0));
-                   contadorAsig++;
-                   
-                   System.out.println("Este alumno cursa: "+alumnos.get(alumno).getAsignaturas().toString());
-                
-                }
-                /*
-                for(int i=0; i<=panelAsignaturaPn.getComponents().length+1;i++){
-                   System.out.println("Borro: "+panelAsignaturaPn.getComponent(0).toString());
-                   panelAsignaturaPn.remove(panelAsignaturaPn.getComponent(0));
-                    
-                
-                }*/
-                
-                /*
-                alumnos.clear();
-                alumnos=cole.getAlumnos();
-                System.out.println(alumnos.toString());
-                */
-            }
-            });
-        
-        
-       
-        altaBt = new JButton("Alta");
-        altaBt.setBounds(20, 350, 80 ,30);
-        altaBt.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-                System.out.println("ACTIVO ALTA");
-                String datosBrutos = cursoTf.getText()+"/"+dniTf.getText()+"/"+nombreTf.getText()+"/"+fechaNacimientoTf.getText();
-               
-                String nombreFichero="errores_"+LocalDateTime.now().toString().replace(":", "_")+".txt";
-                Alumno alu;
-          
-                try {
-                    alu = new Alumno(Integer.parseInt(cursoTf.getText()), dniTf.getText(), nombreTf.getText(), fechaNacimientoTf.getText());
-                    cole.insertaAlumno(alu);
-                    BufferedWriter salidaAlumno = IO.abreEscrituraAnnadir("alumnos.txt");
-                    IO.escribeLinea(salidaAlumno, datosBrutos);
-                    IO.cierraEscritura(salidaAlumno);
-                    System.out.println("construido alumno");
-                    System.out.println(cole.getAlumnos());
-                } catch (MiExcepcion ex) {
-                    escribeError(nombreFichero, datosBrutos+"---Error: "+ex.getMessage());
-                    
-                }
-                
-                seleccionaCurso((String)cursoCb.getSelectedItem());
-                
-                if(nombreRb.isSelected()){
-                    alumnos.sort(null);
-                    alumno=0;
-                    cargaAlumno();
-                }else{
-                    cursoCb.setSelectedIndex(0);
-                    alumnos.sort(new ComparaCursoNombre());
-                    alumno=0;
-                    cargaAlumno();
-                }
-   
-            }
-            });
-            
-        
-        bajaBt = new JButton("Baja");
-        bajaBt.setBounds(180, 350, 80, 30);
-        bajaBt.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-                System.out.println("ACTIVO BAJA");
-          
-                String datosExtraccion;
-                datosExtraccion = alumnos.get(alumno).getCurso()+"/"+alumnos.get(alumno).getDni()+"/"+alumnos.get(alumno).getNombre()+"/"+alumnos.get(alumno).getFechaNacimiento();
-                colegio.getAlumnos().remove(alumnos.get(alumno));
-                        
-                BufferedWriter salidaExpulsados = IO.abreEscrituraAnnadir("ficheroExpulsados.txt");
-                IO.escribeLinea(salidaExpulsados, datosExtraccion);
-                IO.cierraEscritura(salidaExpulsados);
-                
-                seleccionaCurso((String)cursoCb.getSelectedItem());
-                
-                if(nombreRb.isSelected()){
-                    alumnos.sort(null);
-                    alumno=0;
-                    cargaAlumno();
-                }else{
-                    cursoCb.setSelectedIndex(0);
-                    alumnos.sort(new ComparaCursoNombre());
-                    alumno=0;
-                    cargaAlumno();
-                }
-                
-                //TODO Añadir que se borre del fichero al alumno eliminado
-            }
-            });
-        editarBt = new JButton("Editar");
-        editarBt.setBounds(105, 350, 70, 30);
-        editarBt.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-                System.out.println("ACTIVO EDITAR");
-                
-                panelAlumnoPn.setVisible(true);
-                guardarAlumnoBt.setVisible(true);
-                cancelarAlumnoBt.setVisible(true);
-                cargaAlumnoEditar();        
-                Ventana.this.setSize(600, 450);
-                izqActiva(false);
+    public void setCurso(int curso) {
+        if (curso >= 1 && curso <=3) {
+            this.curso = curso;
+        }else{
+            throw new InvalidParameterException("error curso");
+        }
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        if(esBuenDni(dni)){
+           this.dni = dni; 
+        }else{
+             throw new InvalidParameterException("dni no válido");
+        }
  
-            }
-            });
-        
-        guardarAlumnoBt=new JButton("Guardar");
-        guardarAlumnoBt.setBounds(330, 300, 120, 30);
-        guardarAlumnoBt.setVisible(false);
-        guardarAlumnoBt.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-                System.out.println("ACTIVO GUARDARALUMNOS");
-                boolean todoBien=true;
-                try{
-                    try{
-                        alumnos.get(alumno).setCurso(Integer.valueOf(cursoEditarTf.getText()));
-                    }catch(Exception ex2){
-                        cursoEditarTf.setBackground(Color.red);
-                        todoBien=false;
-                    }
+    }
 
-                    try{
-                        alumnos.get(alumno).setDni(dniEditarTf.getText());
-                    }catch(Exception ex3){
-                        dniEditarTf.setBackground(Color.red);
-                        todoBien=false;
-                    }
+    public String getNombre() {
+        return nombre;
+    }
 
-                    try{
-                        alumnos.get(alumno).setNombre(nombreEditarTf.getText());
-                    }catch(Exception ex4){
-                        nombreEditarTf.setBackground(Color.red);
-                        todoBien=false;
-                    }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-                    try{
-                        alumnos.get(alumno).setFechaNacimiento(fechaNacimientoEditarTf.getText());
-                    }catch(MiExcepcion ex5){
-                       fechaNacimientoEditarTf.setBackground(Color.red);
-                       todoBien=false;
-                    }
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
+    }
 
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+    public void setFechaNacimiento(String fechaNacimiento) throws MiExcepcion{
+        try{
+            this.fechaNacimiento = LocalDate.parse(fechaNacimiento);
+            
+        }catch(DateTimeParseException e){
+            throw new MiExcepcion("mala fecha");
+        }
+    }
 
-                    if(nombreRb.isSelected()){
-                        alumnos.sort(null);
-                        alumno=0;
-                        cargaAlumno();
-                    }else{
-                        cursoCb.setSelectedIndex(0);
-                        alumnos.sort(new ComparaCursoNombre());
-                        alumno=0;
-                        cargaAlumno();
-                    }
+    public void asignaAsignaturas(int curso) {
+        Asignatura asig;
 
-                    
+        for (int i = 0; i < Colegio.CURSO_ASIGNATURAS[curso - 1].length; i++) {
+            asig = new Asignatura(Colegio.CURSO_ASIGNATURAS[curso - 1][i]);
+            asignaturas.add(asig);
+        }
 
-                    if(todoBien==true){
-                        for(Component component : panelAlumnoPn.getComponents()){
-                            component.setBackground(Color.white);
-                        }
-                        panelAlumnoPn.setVisible(false);
-                        guardarBt.setVisible(false);
-                        cancelarAlumnoBt.setVisible(false);
-                        Ventana.this.setSize(300, 450);
-                        izqActiva(true);
-                    }
-                    
-                }catch(Exception ex1){
-                    System.out.println("fallo edicion");
-                }
-                
-                
-                //TODO hacer todo esto y cambiar setter
-                
-                
-               
-                //TODO hacer todo esto y cambiar setter 
-            }
-            });
-        
-        cancelarAlumnoBt=new JButton("Cancelar");
-        cancelarAlumnoBt.setBounds(330, 350, 120, 30);
-        cancelarAlumnoBt.setVisible(false);
-        cancelarAlumnoBt.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-                System.out.println("ACTIVO CANCELARALUMNOS");
-                panelAsignaturaPn.setVisible(false);
-                guardarBt.setVisible(false);
-                cancelarAlumnoBt.setVisible(false);
-                Ventana.this.setSize(300, 450);
-                izqActiva(true);
-                
-                for(Component component : panelAlumnoPn.getComponents()){
-                    component.setBackground(Color.white);
-                }
-                
-                if(nombreRb.isSelected()){
-                    alumnos.sort(null);
-                    alumno=0;
-                    cargaAlumno();
-                }else{
-                    cursoCb.setSelectedIndex(0);
-                    alumnos.sort(new ComparaCursoNombre());
-                    alumno=0;
-                    cargaAlumno();
-                }
-               
-                //TODO hacer todo esto y cambiar setter 
-            }
-            });
-        
-        
-        
-        
-        //RADIALBUTTONS 
-        nombreRb = new JRadioButton("Ordena por nombre");
-        nombreRb.setSelected(true);
-        nombreRb.setBounds(100, 170, 150, 30);
-        nombreRb.addActionListener(this);
-        
-        cursoRb = new JRadioButton("Ordena por curso");
-        cursoRb.setBounds(100, 200, 150, 30);
-        cursoRb.addActionListener(this);
-        
-        //ButtonGroup
-        ButtonGroup grupo = new ButtonGroup();
-        grupo.add(nombreRb);
-        grupo.add(cursoRb);
-        
-        
-        //LABELS
-        cursoLb = new JLabel("Curso:"); 
-        cursoLb.setBounds(20, 20, 50, 30);
-        
-        dniLb = new JLabel("DNI:"); 
-        dniLb.setBounds(20, 60, 50, 30);
-        
-        nombreLb = new JLabel("Nombre:"); 
-        nombreLb.setBounds(20, 100, 50, 30);
-        
-        fechaNacimientoLb = new JLabel("Fecha de nacimiento:"); 
-        fechaNacimientoLb.setBounds(20, 140, 150, 30);
-        
-        cursoEditarLb = new JLabel("Curso:"); 
-        cursoEditarLb.setBounds(5, 20, 50, 30);
-        panelAlumnoPn.add(cursoEditarLb);
-        
-        dniEditarLb = new JLabel("DNI:"); 
-        dniEditarLb.setBounds(5, 60, 50, 30);
-        panelAlumnoPn.add(dniEditarLb);
-        
-        
-        nombreEditarLb = new JLabel("Nombre:"); 
-        nombreEditarLb.setBounds(5, 100, 50, 30);
-        panelAlumnoPn.add(nombreEditarLb);
-        
-        fechaNacimientoEditarLb = new JLabel("Fecha:"); 
-        fechaNacimientoEditarLb.setBounds(5, 140, 150, 30);
-        panelAlumnoPn.add(fechaNacimientoEditarLb);
-        
-        //TEXTFIELDS
-        cursoTf = new JTextField(10); 
-        cursoTf.setBounds(80, 20, 50, 30);
-         
-        dniTf = new JTextField(30); 
-        dniTf.setBounds(80, 60, 150, 30);
-        
-        nombreTf = new JTextField(60); 
-        nombreTf.setBounds(80, 100, 150, 30);
-        
-        fechaNacimientoTf = new JTextField(30); 
-        fechaNacimientoTf.setBounds(160, 140, 100, 30);
-        
-        cursoEditarTf = new JTextField(10); 
-        cursoEditarTf.setBounds(60, 20, 50, 30);
-        panelAlumnoPn.add(cursoEditarTf);
-         
-        dniEditarTf = new JTextField(30); 
-        dniEditarTf.setBounds(60, 60, 100, 30);
-        panelAlumnoPn.add(dniEditarTf);
-        
-        nombreEditarTf = new JTextField(60); 
-        nombreEditarTf.setBounds(60, 100, 100, 30);
-        panelAlumnoPn.add(nombreEditarTf);
-        
-        fechaNacimientoEditarTf = new JTextField(30); 
-        fechaNacimientoEditarTf.setBounds(60, 140, 100, 30);
-        panelAlumnoPn.add(fechaNacimientoEditarTf);
-        
-        
-        
-        
-        //INIT
-        this.add(izqBt);
-        this.add(drBt);
-        this.add(matriculaBt);
-        this.add(cursoLb);
-        this.add(dniLb);
-        this.add(nombreLb);
-        this.add(fechaNacimientoLb);
-        this.add(cursoTf);
-        this.add(dniTf);
-        this.add(nombreTf);
-        this.add(fechaNacimientoTf);
-        this.add(nombreRb);
-        this.add(cursoRb);
-        this.add(panelAsignaturaPn);
-        this.add(guardarBt);
-        this.add(altaBt);
-        this.add(bajaBt);
-        this.add(editarBt);
-        this.add(panelAlumnoPn);
-        this.add(guardarAlumnoBt);
-        this.add(cancelarAlumnoBt);
-        
-        
-        
+    }
     
-        cargaAlumno();
     
+    public double notaMedia(){
+        double notaMedia = 0;
+        for (Asignatura asignatura : asignaturas) {
+            notaMedia+=asignatura.notaMedia();            
+        }
+        
+//        for (int i = 0; i < asignaturas.size(); i++) {
+//            notaMedia += asignaturas.get(i).notaMedia();
+//            
+//        }
+       
+        return notaMedia/asignaturas.size();
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        
-        if(e.getSource()==izqBt&&alumno>0){
-            //System.out.println(alumno);
-            this.alumno--;
-            cargaAlumno();
-        }
-        
-        if(e.getSource()==drBt&&alumno<alumnos.size()-1){
-            //System.out.println(alumno);
-            this.alumno++;
-            dniTf.setText(" ");
-            cargaAlumno();
-        }
-        
-        if(e.getSource()==nombreRb){
-            alumnos.sort(null);
-            alumno=0;
-            cargaAlumno();
-        }
-        
-        if(e.getSource()==cursoRb){
-            cursoCb.setSelectedIndex(0);
-            alumnos.sort(new ComparaCursoNombre());
-            alumno=0;
-            cargaAlumno();
-        }
-        
-        
+    public String toString() {
+        return "Alumno{" + "curso=" + curso + ", dni=" + dni + ", nombre=" + nombre +
+                ", fechaNacimiento=" + fechaNacimiento + ", \n      "
+                + "asignaturas=" + asignaturas + '}' +" nota media Alumno= "+this.notaMedia()+ "\n\n";
+    }
 
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
     }
-    
-    private void cargaAlumno(){
-        cursoTf.setText(String.valueOf(alumnos.get(alumno).getCurso()));
-        dniTf.setText(String.valueOf(alumnos.get(alumno).getDni()));
-        nombreTf.setText(String.valueOf(alumnos.get(alumno).getNombre()));
-        fechaNacimientoTf.setText(String.valueOf(alumnos.get(alumno).getFechaNacimiento()));
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Alumno other = (Alumno) obj;
+        if (!Objects.equals(this.dni, other.dni)) {
+            return false;
+        }
+        return true;
     }
-    
-    private void cargaAlumnoEditar(){
-        cursoEditarTf.setText(String.valueOf(alumnos.get(alumno).getCurso()));
-        dniEditarTf.setText(String.valueOf(alumnos.get(alumno).getDni()));
-        nombreEditarTf.setText(String.valueOf(alumnos.get(alumno).getNombre()));
-        fechaNacimientoEditarTf.setText(String.valueOf(alumnos.get(alumno).getFechaNacimiento()));
-    }
-    
-    private void izqActiva(boolean opcion){
-        izqBt.setEnabled(opcion);
-        drBt.setEnabled(opcion);
-        matriculaBt.setEnabled(opcion);
-        cursoLb.setEnabled(opcion);
-        dniLb.setEnabled(opcion);
-        nombreLb.setEnabled(opcion);
-        fechaNacimientoLb.setEnabled(opcion);
-        cursoTf.setEnabled(opcion);
-        dniTf.setEnabled(opcion);
-        nombreTf.setEnabled(opcion);
-        fechaNacimientoTf.setEnabled(opcion);
-        nombreRb.setEnabled(opcion);
-        cursoRb.setEnabled(opcion);
-        izqBt.setEnabled(opcion);
-        izqBt.setEnabled(opcion);
-        izqBt.setEnabled(opcion);
-        altaBt.setEnabled(opcion);
-        bajaBt.setEnabled(opcion);
-        editarBt.setEnabled(opcion);
-        guardarBt.setEnabled(!opcion);
-        panelAsignaturaPn.setEnabled(!opcion);
-        guardarAlumnoBt.setEnabled(!opcion);
-        cancelarAlumnoBt.setEnabled(!opcion);
-        cursoCb.setEnabled(opcion);
-    }
-    
-    private void seleccionaCurso(String curso){
-        switch (curso) {
-            case "Todos":
-                alumnos.clear();
-                for(Alumno alu : cole.getAlumnos()){
-                    alumnos.add(alu);
-                    
-                }
-                System.out.println("Copio alumnos desde cole "+cole.getAlumnos().toString());
-                System.out.println("desde seleccionacurso"+alumnos.toString());
-                break;
-            case "1":
-                alumnos.clear();
-                for(Alumno alu : cole.getAlumnos()){
-                        System.out.println(alu.toString());
-                    if(alu.getCurso()==1){
-                        alumnos.add(alu); 
-                    }
-                    
-                }  
-                System.out.println("desde seleccionacurso"+alumnos.toString());
-                break;
-            case "2":
-                alumnos.clear();
-                for(Alumno alu : cole.getAlumnos()){
-                    if(alu.getCurso()==2){
-                        alumnos.add(alu);
-                    } 
-                    
-                }
-                System.out.println("desde seleccionacurso"+alumnos.toString());
-                break;
+
+    @Override
+    public int compareTo(Alumno o) {     
+        return nombre.compareToIgnoreCase(o.nombre);
             
-            case "3":
-                alumnos.clear();
-                for(Alumno alu : cole.getAlumnos()){
-                    if(alu.getCurso()==3){
-                        alumnos.add(alu);
-                    } 
-                    
-                }  
-                System.out.println("desde seleccionacurso"+alumnos.toString());
-                break;
-            
+    }
+    
+    public static boolean esBuenDni(String dni){
+        String numeros;
+        char letra;
+        int valorNumerico;
+        String codigo = "TRWAGMYFPDXBNJZSQVHLCKE";
+        if(dni.length()==9){
+            numeros = dni.substring(0, 8);
+            letra = dni.charAt(8);
+            if(Character.isAlphabetic(letra)){
+                if(letra>90){
+                    letra = (char) (letra - ('a'-'A'));
+                }
                 
-            default:
-                alumnos.clear();
-                alumnos=cole.getAlumnos();
-                System.out.println("desde seleccionacurso"+alumnos.toString());
-                break;
-        }
-    
-    }
-    class ComparaCursoNombre implements Comparator<Alumno>{
-
-        @Override
-        public int compare(Alumno o1, Alumno o2) {
-            int numero = 0;
-            
-            if (o1.getCurso() > o2.getCurso()) {
-                numero = 1;
-            } else {
-                if (o1.getCurso() < o2.getCurso()) {
-                    numero = -1;
-                } else {
-                    if (o1.getCurso() == o2.getCurso()) {
-                        numero = o1.getNombre().compareToIgnoreCase(o2.getNombre());
+                try{
+                    valorNumerico = Integer.parseInt(numeros);
+                    if(codigo.charAt(valorNumerico%23)==letra){
+                        return true;
+                    }else{
+                        return false;
                     }
+                }catch (NumberFormatException ex){
+                    return false;
                 }
+            }else{
+                return false;
             }
-            
-            return numero;
-            
+        }else{
+            return false;
         }
-        
-        
-        
-        
     }
     
-}
+    }
