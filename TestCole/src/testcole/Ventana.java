@@ -680,9 +680,9 @@ public class Ventana extends JFrame implements ActionListener{
                 if (o1.getCurso() < o2.getCurso()) {
                     numero = -1;
                 } else {
-                    /*if (o1.getCurso() == o2.getCurso()) {*/
+                    if (o1.getCurso() == o2.getCurso()) {
                         numero = o1.getNombre().compareToIgnoreCase(o2.getNombre());
-                    //}
+                    }
                 }
             }
             
