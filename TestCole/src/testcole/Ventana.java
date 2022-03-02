@@ -4,6 +4,8 @@
  */
 package testcole;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -326,11 +328,69 @@ public class Ventana extends JFrame implements ActionListener{
             public void actionPerformed(ActionEvent e) {
                 //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
                 System.out.println("ACTIVO GUARDARALUMNOS");
-                panelAlumnoPn.setVisible(false);
-                guardarBt.setVisible(false);
-                cancelarAlumnoBt.setVisible(false);
-                Ventana.this.setSize(300, 450);
-                izqActiva(true);
+                boolean todoBien=true;
+                try{
+                    try{
+                        alumnos.get(alumno).setCurso(Integer.valueOf(cursoEditarTf.getText()));
+                    }catch(Exception ex2){
+                        cursoEditarTf.setBackground(Color.red);
+                        todoBien=false;
+                    }
+
+                    try{
+                        alumnos.get(alumno).setDni(dniEditarTf.getText());
+                    }catch(Exception ex3){
+                        dniEditarTf.setBackground(Color.red);
+                        todoBien=false;
+                    }
+
+                    try{
+                        alumnos.get(alumno).setNombre(nombreEditarTf.getText());
+                    }catch(Exception ex4){
+                        nombreEditarTf.setBackground(Color.red);
+                        todoBien=false;
+                    }
+
+                    try{
+                        alumnos.get(alumno).setFechaNacimiento(fechaNacimientoEditarTf.getText());
+                    }catch(MiExcepcion ex5){
+                       fechaNacimientoEditarTf.setBackground(Color.red);
+                       todoBien=false;
+                    }
+
+
+                    if(nombreRb.isSelected()){
+                        alumnos.sort(null);
+                        alumno=0;
+                        cargaAlumno();
+                    }else{
+                        cursoCb.setSelectedIndex(0);
+                        alumnos.sort(new ComparaCursoNombre());
+                        alumno=0;
+                        cargaAlumno();
+                    }
+
+                    
+
+                    if(todoBien==true){
+                        for(Component component : panelAlumnoPn.getComponents()){
+                            component.setBackground(Color.white);
+                        }
+                        panelAlumnoPn.setVisible(false);
+                        guardarBt.setVisible(false);
+                        cancelarAlumnoBt.setVisible(false);
+                        Ventana.this.setSize(300, 450);
+                        izqActiva(true);
+                    }
+                    
+                }catch(Exception ex1){
+                    System.out.println("fallo edicion");
+                }
+                
+                
+                //TODO hacer todo esto y cambiar setter
+                
+                
                
                 //TODO hacer todo esto y cambiar setter 
             }
@@ -349,6 +409,17 @@ public class Ventana extends JFrame implements ActionListener{
                 cancelarAlumnoBt.setVisible(false);
                 Ventana.this.setSize(300, 450);
                 izqActiva(true);
+                
+                if(nombreRb.isSelected()){
+                    alumnos.sort(null);
+                    alumno=0;
+                    cargaAlumno();
+                }else{
+                    cursoCb.setSelectedIndex(0);
+                    alumnos.sort(new ComparaCursoNombre());
+                    alumno=0;
+                    cargaAlumno();
+                }
                
                 //TODO hacer todo esto y cambiar setter 
             }
@@ -605,7 +676,7 @@ public class Ventana extends JFrame implements ActionListener{
                 if (o1.getCurso() < o2.getCurso()) {
                     numero = -1;
                 } else {
-                    /*if (o1.getCurso() == o2.getCurso()) {*/
+                    /if (o1.getCurso() == o2.getCurso()) {/
                         numero = o1.getNombre().compareToIgnoreCase(o2.getNombre());
                     //}
                 }
