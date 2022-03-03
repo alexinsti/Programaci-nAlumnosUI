@@ -7,6 +7,7 @@ package testcole;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import static testcole.TestCole.colegio;
 
 /**
  *
@@ -100,7 +101,21 @@ public class Colegio {
         
     }
    
-    
+    public String toStringAsig(){
+        String resultado="";
+        for(Alumno alu : alumnos){
+            resultado=resultado+(alu.getCurso()+"/"+alu.getDni()+"/"+alu.getNombre()+"/"+alu.getFechaNacimiento()+"/");
+            for(Asignatura asig :alu.getAsignaturas()){
+                resultado=resultado+asig.getNombreAsig()+"/";
+            
+            }
+            resultado=resultado+"\n";
+        
+        }
+        
+        
+        return resultado;
+    }
     
     
 }
