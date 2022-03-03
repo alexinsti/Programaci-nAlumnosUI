@@ -34,7 +34,7 @@ import static testcole.TestCole.escribeError;
  */
 public class Ventana extends JFrame implements ActionListener{
         
-    private JButton izqBt, drBt, matriculaBt, guardarBt, altaBt, bajaBt, editarBt, guardarAlumnoBt, cancelarAlumnoBt;
+    private JButton izqBt, drBt, matriculaBt, guardarBt, altaBt, bajaBt, editarBt, guardarAlumnoBt, cancelarAlumnoBt, exportarBt;
     private JLabel cursoLb, dniLb, nombreLb, fechaNacimientoLb, cursoEditarLb, dniEditarLb, nombreEditarLb, fechaNacimientoEditarLb;
     private JTextField cursoTf, dniTf, nombreTf, fechaNacimientoTf, cursoEditarTf, dniEditarTf, nombreEditarTf, fechaNacimientoEditarTf;
     private JRadioButton nombreRb, cursoRb;
@@ -475,7 +475,16 @@ public class Ventana extends JFrame implements ActionListener{
             }
             });
         
-        
+        exportarBt=new JButton("Export");
+        exportarBt.setBounds(15, 175, 80, 50 );
+        exportarBt.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BufferedWriter salidaExpulsados = IO.abreEscritura("ficheroExportar.txt");
+                IO.escribeLinea(salidaExpulsados, cole.toStringAsig());
+                IO.cierraEscritura(salidaExpulsados);
+            }
+            });
         
         
         //RADIALBUTTONS 
@@ -578,6 +587,7 @@ public class Ventana extends JFrame implements ActionListener{
         this.add(panelAlumnoPn);
         this.add(guardarAlumnoBt);
         this.add(cancelarAlumnoBt);
+        this.add(exportarBt);
         
         
         
@@ -659,6 +669,7 @@ public class Ventana extends JFrame implements ActionListener{
         guardarAlumnoBt.setEnabled(!opcion);
         cancelarAlumnoBt.setEnabled(!opcion);
         cursoCb.setEnabled(opcion);
+        exportarBt.setEnabled(opcion);
     }
     
     private void seleccionaCurso(String curso){
