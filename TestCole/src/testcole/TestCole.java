@@ -7,6 +7,7 @@ package testcole;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -22,7 +23,7 @@ public class TestCole {
        colegio = new Colegio();
               
        
-       BufferedReader entrada = IO.abreLectura("alumnos.txt");
+       BufferedReader entrada = IO.abreLectura("ficheroExportar.txt");
        leerAlumnos(entrada);
        IO.cierraLectura(entrada);
        
@@ -41,7 +42,8 @@ public class TestCole {
     static void leerAlumnos(BufferedReader entrada){
         String linea;
         String nombreFichero="errores_"+LocalDateTime.now().toString().replace(":", "_")+".txt";
-        String[] parametros;        
+        String[] parametros;   
+        ArrayList<String> asignaturas= new ArrayList();
         linea = IO.leeLinea(entrada);
         Alumno alu;
         while(linea!=null){
@@ -51,6 +53,25 @@ public class TestCole {
             
             try{
                alu = new Alumno(Integer.parseInt(parametros[0]), parametros[1], parametros[2], parametros[3]); 
+               //meto en un arraylist las asignaturas que le pasan junto con el alumno
+               for(int i=0; i<Colegio.CURSO_ASIGNATURAS.length ;i++){
+                   for(int j=0; j<Colegio.CURSO_ASIGNATURAS[i].length ;j++){
+                        for(String param : parametros){
+                            if(Colegio.CURSO_ASIGNATURAS[i][j].equalsIgnoreCase(param)){
+                                asignaturas.add(param);
+                            }
+
+                        }
+                   }
+               }
+               //compruebo si los 3 ultimos parametros, que son las asignaturas se corresponden con alguna del arraylist de antes
+               for(int i=parametros.length-1; i>3 ;i--){
+                    if(asignaturas.contains(parametros[i])){
+                            alu.getAsignaturas().add(new Asignatura(parametros[i]));
+                    }
+               }
+               
+               
                colegio.insertaAlumno(alu);
             }catch(Exception e){
                 escribeError(nombreFichero, linea+"---Error: "+e.getMessage());
