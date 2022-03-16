@@ -114,6 +114,18 @@ public class TestCole {
 
     }
     
+    /**
+     * Crea un fichero de texto que contien el mensaje de error
+     * @author Alejandro Álvarez Salas
+     * @param ficheroError El nombre del fichero en que vamos a crear el error
+     * @param error El mensaje del error a crear
+     * @throws IOException Cuando se tiene algún problema al escribir en el fichero
+     * @see IO#abreEscritura(java.lang.String) 
+     * @see IO#escribeLinea(java.io.BufferedWriter, java.lang.String) 
+     * @see IO#cierraEscritura(java.io.BufferedWriter) 
+     */
+    
+    
     static void escribeError(String ficheroError, String error){
         BufferedWriter salidaErrores = IO.abreEscrituraAnnadir(ficheroError);
         IO.escribeLinea(salidaErrores, "---Error: "+error);
