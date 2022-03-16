@@ -6,6 +6,7 @@ package testcole;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,8 +29,7 @@ public class TestCole {
    * @see IO#abreEscritura(java.lang.String) 
    * @see IO#cierraEscritura(java.io.BufferedWriter) 
    * @see #leerAlumnos(java.io.BufferedReader) 
-   * @see Ventana#Ventana(testcole.Colegio) 
-   * @see Ventana#setVisible(boolean) 
+   * @see Ventana#Ventana(testcole.Colegio)  
    * @param args 
    */
   
@@ -55,7 +55,20 @@ public class TestCole {
        */
     }
     
-    
+    /**
+     * Lee el un fichero y si contiene los datos de los alumnos en un formato válido inserta al alumnos con sus correspondientes asignaturas
+     * en el arrayList de alumnos en el objeto colegio. 
+     * Si el formato es inválido lanza excepciones y crea ficheros de error.
+     * @author Alejandro Álvarez Salas
+     * @param entrada Es el bufferReader que está leyendo del fichero de texto del que queremos sacar la información
+     * @throws Exception Si se produce algún error al intentar insertar el alumno o las asignaturas
+     * @throws IOException Si se produce algún error al intentar leer o escribir los ficheros
+     * @see IO#leeLinea(java.io.BufferedReader) 
+     * @see Alumno#Alumno(int, java.lang.String, java.lang.String, java.lang.String) 
+     * @see Asignatura#Asignatura(java.lang.String) 
+     * @see Colegio#insertaAlumno(testcole.Alumno) 
+     * @see #escribeError(java.lang.String, java.lang.String) 
+     */
     
     static void leerAlumnos(BufferedReader entrada){
         String linea;
