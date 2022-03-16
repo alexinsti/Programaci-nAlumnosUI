@@ -14,11 +14,26 @@ import java.util.Scanner;
 
 /**
  *
- * @author Diurno
+ * @author Alejandro Álvarez Salas
  */
 public class TestCole {
 
   static Colegio colegio;
+  
+  /**
+   * Instancia un objeto colegio, lo llena leyendo de un fichero de texto mediante
+   * un  bufferedReader, instancia un objeto ventana y lo hace visible
+   * @author Alejandro Álvarez Salas
+   * @see Colegio#Colegio() 
+   * @see IO#abreEscritura(java.lang.String) 
+   * @see IO#cierraEscritura(java.io.BufferedWriter) 
+   * @see #leerAlumnos(java.io.BufferedReader) 
+   * @see Ventana#Ventana(testcole.Colegio) 
+   * @see Ventana#setVisible(boolean) 
+   * @param args 
+   */
+  
+  
     public static void main(String[] args) {
         
        colegio = new Colegio();
@@ -39,6 +54,8 @@ public class TestCole {
       System.out.println(colegio.toString());
        */
     }
+    
+    
     
     static void leerAlumnos(BufferedReader entrada){
         String linea;
