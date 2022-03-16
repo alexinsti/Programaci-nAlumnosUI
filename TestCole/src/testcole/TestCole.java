@@ -67,7 +67,11 @@ public class TestCole {
      * @see Alumno#Alumno(int, java.lang.String, java.lang.String, java.lang.String) 
      * @see Asignatura#Asignatura(java.lang.String) 
      * @see Colegio#insertaAlumno(testcole.Alumno) 
-     * @see #escribeError(java.lang.String, java.lang.String) 
+     * @see #escribeError(java.lang.String, java.lang.String)
+     * @see Alumno#setCurso(int) 
+     * @see Alumno#setDni(java.lang.String) 
+     * @see Alumno#setFechaNacimiento(java.lang.String) 
+     * @see Alumno#setNombre(java.lang.String) 
      */
     
     static void leerAlumnos(BufferedReader entrada){
@@ -150,6 +154,10 @@ public class TestCole {
      * @see #escribeError(java.lang.String, java.lang.String) 
      * @see Colegio#ordenaPorCursoNombre() 
      * @see Colegio#ordenaPorFechaDeNacimiento() 
+     * @see Alumno#setCurso(int) 
+     * @see Alumno#setDni(java.lang.String) 
+     * @see Alumno#setFechaNacimiento(java.lang.String) 
+     * @see Alumno#setNombre(java.lang.String) 
      */
     
     static void menu(){
