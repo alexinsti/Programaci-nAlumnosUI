@@ -63,6 +63,8 @@ public class TestCole {
      * @param entrada Es el bufferReader que está leyendo del fichero de texto del que queremos sacar la información
      * @throws Exception Si se produce algún error al intentar insertar el alumno o las asignaturas
      * @throws IOException Si se produce algún error al intentar leer o escribir los ficheros
+     * @throws MiExcepcion Si se comete algún error a la hora de instanciar un alumno
+     * @throws NumberFormatException Si la letra del Dni no es la correspondiente a la parte numérica
      * @see IO#leeLinea(java.io.BufferedReader) 
      * @see Alumno#Alumno(int, java.lang.String, java.lang.String, java.lang.String) 
      * @see Asignatura#Asignatura(java.lang.String) 
@@ -146,6 +148,7 @@ public class TestCole {
      * @author Alejandro Álvarez Salas
      * @throws IOException ocurre cuando se da un error con la lectura o escritura de archivos
      * @throws MiExcepcion ocurre al cometer un error al intentar instanciar un alumno
+     * @throws NumberFormatException Si la letra del Dni no es la correspondiente a la parte numérica
      * @see Alumno#Alumno(int, java.lang.String, java.lang.String, java.lang.String) 
      * @see Colegio#insertaAlumno(testcole.Alumno) 
      * @see IO#abreEscritura(java.lang.String) 
