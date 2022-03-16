@@ -132,6 +132,26 @@ public class TestCole {
         IO.cierraEscritura(salidaErrores);
     }
     
+    
+    /**
+     * Muestra un menu por consola y pide un códio de acción, así como unos datos, y 
+     * realiza opreaciones en base a estos. Estas opciones son: Insertar aluno, extraer alumno, mostrar por nombre y curso
+     * y mostrar por fecha de nacimiento.
+     * Al insertar se escribe un alumno en el fichero que contiene los datos de los alumnos.
+     * Al extraerlo se borran los datos del alumno y se escriben en un fichero de alumnos expulsados
+     * @author Alejandro Álvarez Salas
+     * @throws IOException ocurre cuando se da un error con la lectura o escritura de archivos
+     * @throws MiExcepcion ocurre al cometer un error al intentar instanciar un alumno
+     * @see Alumno#Alumno(int, java.lang.String, java.lang.String, java.lang.String) 
+     * @see Colegio#insertaAlumno(testcole.Alumno) 
+     * @see IO#abreEscritura(java.lang.String) 
+     * @see IO#escribeLinea(java.io.BufferedWriter, java.lang.String)
+     * @see IO#cierraEscritura(java.io.BufferedWriter) 
+     * @see #escribeError(java.lang.String, java.lang.String) 
+     * @see Colegio#ordenaPorCursoNombre() 
+     * @see Colegio#ordenaPorFechaDeNacimiento() 
+     */
+    
     static void menu(){
         Scanner miScanner = new Scanner(System.in);
        int opcion = 55;
